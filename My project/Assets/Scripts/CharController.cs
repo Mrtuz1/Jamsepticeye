@@ -12,8 +12,8 @@ public class CharController : MonoBehaviour
     [SerializeField] private Transform[] firePoints; // Birden fazla fire point
 
     // Eklenen kısım: X sınırları
-    private float minX = -10f;
-    private float maxX = 10f;
+    private float minX = -8f;
+    private float maxX = 8f;
 
     void Start()
     {
