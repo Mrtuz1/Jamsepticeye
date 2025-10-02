@@ -11,6 +11,10 @@ public class CharController : MonoBehaviour
 
     [SerializeField] private Transform[] firePoints; // Birden fazla fire point
 
+    // Eklenen kısım: X sınırları
+    private float minX = -10f;
+    private float maxX = 10f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +40,11 @@ public class CharController : MonoBehaviour
     {
         // Karakteri hareket ettir
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+
+        // Eklenen kısım: X pozisyonunu sınırla
+        Vector2 clampedPos = rb.position;
+        clampedPos.x = Mathf.Clamp(clampedPos.x, minX, maxX);
+        rb.position = clampedPos;
     }
 
     void Shoot()
