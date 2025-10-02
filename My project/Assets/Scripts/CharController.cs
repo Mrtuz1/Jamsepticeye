@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class CharController : MonoBehaviour
 {
-    public float moveSpeed = 5f;          // Karakterin hareket h�z�
-    public GameObject bulletPrefab;       // Ate�lenecek mermi prefab'�
-    public Transform firePoint;           // Merminin ��k�� noktas�
-    public float bulletSpeed = 10f;       // Mermi h�z�
+    public float moveSpeed = 5f;          // Karakterin hareket hızı
+    public GameObject bulletPrefab;       // Ateşlenecek mermi prefab'ı
+    public float bulletSpeed = 10f;       // Mermi hızı
 
     private Rigidbody2D rb;
     private float moveInput;
+
+    [SerializeField] private Transform[] firePoints; // Birden fazla fire point
 
     void Start()
     {
@@ -17,14 +18,14 @@ public class CharController : MonoBehaviour
 
     void Update()
     {
-        // Hareket giri�i
+        // Hareket girişi
         moveInput = 0;
         if (Input.GetKey(KeyCode.A))
             moveInput = -1;
         if (Input.GetKey(KeyCode.D))
             moveInput = 1;
 
-        // Ate�leme
+        // Ateşleme
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Shoot();
@@ -39,13 +40,16 @@ public class CharController : MonoBehaviour
 
     void Shoot()
     {
-        if (bulletPrefab != null && firePoint != null)
+        if (bulletPrefab != null && firePoints.Length > 0)
         {
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-            if (bulletRb != null)
+            foreach (Transform firePoint in firePoints)
             {
-                bulletRb.linearVelocity = Vector2.up * bulletSpeed; 
+                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+                Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+                if (bulletRb != null)
+                {
+                    bulletRb.linearVelocity = firePoint.up * bulletSpeed;
+                }
             }
         }
     }
