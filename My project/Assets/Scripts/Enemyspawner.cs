@@ -1,82 +1,20 @@
-using System.Collections;
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Prefab ve Noktalar")]
-    public GameObject enemyPrefab;
-    public Transform[] spawnPoints;
-
-    [Header("Dalga Ayarları")]
-    public int enemiesPerWave = 3;              // İlk dalgada kaç düşman doğacak
-    public float waveInterval = 2f;             // Dalgalar arası süre
-
-    [Header("Zorluk Ayarları")]
-    public float startSpawnInterval = 1.5f;     // İlk dalgalar arası süre
-    public float minSpawnInterval = 0.5f;       // Minimum süre (daha hızlı olmasın)
-    public float difficultyIncreaseInterval = 10f; // Kaç saniyede bir zorluk artsın
-    public float spawnIntervalDecreaseAmount = 0.1f;
-    public int maxEnemiesPerWave = 10;
-
-    private float waveTimer;
-    private float difficultyTimer;
-    private float currentSpawnInterval;
-    private int currentEnemiesPerWave;
+    public GameObject enemyPrefab; // â† Bu satÄ±r Ã§ok Ã¶nemli
+    public float spawnInterval = 1.5f;
+    public float xRange = 2.5f;
 
     void Start()
     {
-        currentSpawnInterval = startSpawnInterval;
-        waveTimer = currentSpawnInterval;
-        difficultyTimer = difficultyIncreaseInterval;
-        currentEnemiesPerWave = enemiesPerWave;
-    }
-
-    void Update()
-    {
-        waveTimer -= Time.deltaTime;
-        difficultyTimer -= Time.deltaTime;
-
-        // Yeni dalga zamanı geldiyse
-        if (waveTimer <= 0f)
-        {
-            StartCoroutine(SpawnWave());
-            waveTimer = currentSpawnInterval;
-        }
-
-        // Zorluk artırma zamanı geldiyse
-        if (difficultyTimer <= 0f)
-        {
-            // Dalga süresini azalt
-            currentSpawnInterval = Mathf.Max(minSpawnInterval, currentSpawnInterval - spawnIntervalDecreaseAmount);
-
-            // Aynı anda doğacak düşman sayısını artır
-            if (currentEnemiesPerWave < maxEnemiesPerWave)
-                currentEnemiesPerWave++;
-
-            difficultyTimer = difficultyIncreaseInterval;
-        }
-    }
-
-    IEnumerator SpawnWave()
-    {
-        for (int i = 0; i < currentEnemiesPerWave; i++)
-        {
-            SpawnEnemy();
-            yield return new WaitForSeconds(0.2f); // Düşmanlar arası kısa gecikme
-        }
+        InvokeRepeating(nameof(SpawnEnemy), 1f, spawnInterval);
     }
 
     void SpawnEnemy()
     {
-        if (enemyPrefab == null || spawnPoints.Length == 0)
-        {
-            Debug.LogWarning("Enemy Prefab veya spawn noktaları ayarlanmamış.");
-            return;
-        }
-
-        int index = Random.Range(0, spawnPoints.Length);
-        Transform spawnPoint = spawnPoints[index];
-
-        Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        float randomX = Random.Range(-xRange, xRange);
+        Vector2 spawnPos = new Vector2(randomX, 6f);
+        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
     }
 }
