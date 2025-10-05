@@ -1,3 +1,5 @@
+
+
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -32,8 +34,6 @@ public class Enemy : MonoBehaviour
         {
             Destroy(collision.gameObject); // Mermiyi yok et
             Destroy(gameObject);           // Düþmaný yok et
-
-
         }
     }
 }
